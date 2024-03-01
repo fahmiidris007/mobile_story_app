@@ -25,6 +25,9 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Consumer<StoryDetailProvider>(builder: (context, state, _) {
       return Scaffold(
+        appBar:AppBar(
+          title: const Text('Story Detail'),
+        ),
         body: _buildBody(state),
       );
     });
@@ -35,29 +38,47 @@ class _DetailPageState extends State<DetailPage> {
       return const Center(child: CircularProgressIndicator());
     } else if (state.state == ResultState.hasData) {
       return SingleChildScrollView(
-        child: Column(
-          children: [
-            Image.network(state.result.story.photoUrl),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(8.0),
+                  child: Image.network(
+                    state.result.story.photoUrl,
+                    width: 250,
+                    height: 250,
+                    fit: BoxFit.cover,
+                    scale: 2.0,
+                    // loadingBuilder: (BuildContext context, Widget child,
+                    //     ImageChunkEvent? loadingProgress) {
+                    //   if (loadingProgress == null) return child;
+                    //   return CircularProgressIndicator(
+                    //     value: loadingProgress.expectedTotalBytes != null
+                    //         ? loadingProgress.cumulativeBytesLoaded /
+                    //         loadingProgress.expectedTotalBytes!
+                    //         : null,
+                    //   );
+                    // },
+                  ),
+                ),
+              ),
+              Text(
                 state.result.story.name,
                 style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
+              Text(
                 state.result.story.description,
                 style: const TextStyle(
                   fontSize: 16,
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
     } else if (state.state == ResultState.noData) {

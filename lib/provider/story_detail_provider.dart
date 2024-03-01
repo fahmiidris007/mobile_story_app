@@ -8,9 +8,6 @@ class StoryDetailProvider extends ChangeNotifier{
   late final ApiServices apiServices;
   final String id;
 
-  // StoryDetailProvider({required this.apiServices, this.id = ''}){
-  //   fetchStoryDetail(id);
-  // }
   StoryDetailProvider({required this.apiServices, this.id = ''});
 
   late StoryDetail _storyDetail;

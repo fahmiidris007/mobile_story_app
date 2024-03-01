@@ -76,7 +76,7 @@ class _ListPageState extends State<ListPage> {
         IconButton(
           onPressed: () {
             context.read<AuthenticationProvider>().logout();
-            Navigator.pushNamed(context, HomePage.routeName);
+            Navigator.pushReplacementNamed(context, HomePage.routeName);
           },
           icon: const Icon(Icons.logout_outlined),
         ),
