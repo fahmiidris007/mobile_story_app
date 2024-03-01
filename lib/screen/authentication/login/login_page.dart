@@ -74,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                             await provider.login(
                                 emailController.text, passwordController.text);
                             if (provider.state == ResultState.success) {
-                              Navigator.pushNamed(context, HomePage.routeName);
+                              Navigator.pushReplacementNamed(context, HomePage.routeName);
                             } else if (provider.state == ResultState.loading) {
                               const CircularProgressIndicator();
                             } else {
