@@ -20,7 +20,7 @@ class CardStory extends StatelessWidget {
         subtitle: Text(listStory.description),
         onTap: () {
           Navigator.pushNamed(context, DetailPage.routeName,
-              arguments: listStory);
+              arguments: listStory.id);
         },
       ),
     );

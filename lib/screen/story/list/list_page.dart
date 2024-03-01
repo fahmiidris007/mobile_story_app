@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:mobile_story_app/model/story/list/story_list.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
 import 'package:mobile_story_app/provider/story_list_provider.dart';
 import 'package:mobile_story_app/screen/home/home_page.dart';
-import 'package:mobile_story_app/screen/story/detail/detail_page.dart';
 import 'package:mobile_story_app/screen/story/list/widget/card_story.dart';
-import 'package:mobile_story_app/screen/story/list/widget/image_builder.dart';
 import 'package:provider/provider.dart';
 
 class ListPage extends StatefulWidget {

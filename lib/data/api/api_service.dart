@@ -3,12 +3,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mobile_story_app/model/Authentication/login/login.dart';
 import 'package:mobile_story_app/model/Authentication/register/register.dart';
+import 'package:mobile_story_app/model/story/detail/story_detail.dart';
 import 'package:mobile_story_app/model/story/list/story_list.dart';
 import 'package:mobile_story_app/utils/session_manager.dart';
 
 class ApiServices {
   static const String baseUrl = 'https://story-api.dicoding.dev/v1/';
-
+  var sessionManager = SessionManager();
 
   Future<Login> login(String email, String password) async {
     var url = Uri.parse('${baseUrl}login');
@@ -55,20 +56,32 @@ class ApiServices {
 
   Future<StoryList> getStoryList() async {
     var url = Uri.parse('${baseUrl}stories');
-    var sessionManager = SessionManager();
     var token = await sessionManager.getUserToken();
     var headers = {
       'Authorization': 'Bearer $token',
     };
-    print(headers);
+    var response = await http.get(url, headers: headers);
+    if (response.statusCode == 200) {
+      return storyListFromJson(response.body);
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<StoryDetail> getStoryDetail(String id) async {
+    var url = Uri.parse('${baseUrl}stories/$id');
+    var token = await sessionManager.getUserToken();
+    var headers = {
+      'Authorization': 'Bearer $token',
+    };
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
       print(
-          'Get story list success. Status code: ${response.statusCode}, body: ${response.body}');
-      return storyListFromJson(response.body);
+          'Get story detail success. Status code: ${response.statusCode}, body: ${response.body}');
+      return storyDetailFromJson(response.body);
     } else {
       print(
-          'Get story list failed. Status code: ${response.statusCode}, body: ${response.body}');
+          'Get story detail failed. Status code: ${response.statusCode}, body: ${response.body}');
       throw Exception('Failed to load data');
     }
   }

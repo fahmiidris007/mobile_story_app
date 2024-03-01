@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:mobile_story_app/data/api/api_service.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
+import 'package:mobile_story_app/provider/story_detail_provider.dart';
 import 'package:mobile_story_app/provider/story_list_provider.dart';
 import 'package:mobile_story_app/screen/Authentication/login/login_page.dart';
 import 'package:mobile_story_app/screen/Authentication/register/register_page.dart';
@@ -30,6 +32,9 @@ class MyApp extends StatelessWidget {
             apiServices: ApiServices(),
           ),
         ),
+        ChangeNotifierProvider(create: (context) => StoryDetailProvider(
+          apiServices: ApiServices(),
+        )),
       ],
       child: MaterialApp(
         title: 'Mobile Story App',
@@ -43,7 +48,9 @@ class MyApp extends StatelessWidget {
           '/register': (context) => const RegisterPage(),
           '/list': (context) => const ListPage(),
           '/home': (context) => HomePage(),
-          '/detail': (context) => const DetailPage(),
+          '/detail': (context) => DetailPage(
+            id: ModalRoute.of(context)?.settings.arguments as String,
+          ),
         },
       ),
     );
