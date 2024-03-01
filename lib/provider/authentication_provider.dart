@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:mobile_story_app/data/api/api_service.dart';
 import 'package:mobile_story_app/model/Authentication/login/login.dart';
 import 'package:mobile_story_app/model/Authentication/register/register.dart';
+import 'package:mobile_story_app/utils/session_manager.dart';
 
-enum ResultState { Loading, Success, Error }
+enum ResultState { loading, success, error }
 
 class AuthenticationProvider extends ChangeNotifier{
   late final ApiServices apiServices;
 
   AuthenticationProvider({required this.apiServices});
 
+  final SessionManager _sessionManager = SessionManager();
   late ResultState _state;
   String _message = '';
   late Login _login;
@@ -22,37 +24,42 @@ class AuthenticationProvider extends ChangeNotifier{
 
   Future<void> login(String email, String password) async {
     try {
-      _state = ResultState.Loading;
+      _state = ResultState.loading;
       notifyListeners();
       _login = await apiServices.login(email, password);
       if (_login.error) {
-        _state = ResultState.Error;
+        _state = ResultState.error;
         _message = _login.message;
       } else {
-        _state = ResultState.Success;
+        _state = ResultState.success;
+        await _sessionManager.setUserToken(_login.loginResult.token);
       }
     } catch (e) {
-      _state = ResultState.Error;
-      _message = 'Login failed, please try again later';
+      _state = ResultState.error;
+      _message = 'Network Error, Please try again';
     }
     notifyListeners();
   }
 
   Future<void> register(String name, String email, String password) async {
     try {
-      _state = ResultState.Loading;
+      _state = ResultState.loading;
       notifyListeners();
       _register = await apiServices.register(name, email, password);
       if (_register.error) {
-        _state = ResultState.Error;
+        _state = ResultState.error;
         _message = _register.message;
       } else {
-        _state = ResultState.Success;
+        _state = ResultState.success;
       }
     } catch (e) {
-      _state = ResultState.Error;
-      _message = 'Register failed, please try again later';
+      _state = ResultState.error;
+      _message = 'Network Error, Please try again';
     }
     notifyListeners();
+  }
+
+  Future<void> logout() async {
+    await _sessionManager.clearUserToken();
   }
 }
