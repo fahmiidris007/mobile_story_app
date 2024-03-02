@@ -74,8 +74,12 @@ class _ListPageState extends State<ListPage> {
     return AppBar(
       title: const Text('Story List'),
       actions: [
-        IconButton(onPressed: (){
-          Navigator.pushNamed(context, AddStoryPage.routeName);
+        IconButton(onPressed: ()async{
+          final result = await Navigator.pushNamed(context, AddStoryPage.routeName);
+          // If the upload was successful, refresh the story list
+          if (result == true) {
+            context.read<StoryListProvider>().fetchAllStory();
+          }
         }, icon: const Icon(Icons.add_circle_outline),),
         IconButton(
           onPressed: () {

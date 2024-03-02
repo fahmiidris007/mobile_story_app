@@ -17,7 +17,6 @@ class AddStoryPage extends StatefulWidget {
 }
 
 class _AddStoryPageState extends State<AddStoryPage> {
-  final _formKey = GlobalKey<FormState>();
   final _descController = TextEditingController();
 
   @override
@@ -34,12 +33,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
         actions: [
           IconButton(
             onPressed: () => _onUpload(),
-            icon: context.watch<AddStoryProvider>().isUploading
-                ? const CircularProgressIndicator(
-              color: Colors.white,
-            )
-                : const Icon(Icons.upload),
-            tooltip: "Unggah",
+            icon: const Icon(Icons.upload),
           ),
         ],
       ),
@@ -129,6 +123,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
     if (uploadProvider.addStory != null) {
       uploadProvider.setImageFile(null);
       uploadProvider.setImagePath(null);
+      Navigator.pop(context, true);
     }
     scaffoldMessengerState.showSnackBar(
       SnackBar(content: Text(uploadProvider.message)),
