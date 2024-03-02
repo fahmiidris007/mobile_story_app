@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
 import 'package:mobile_story_app/provider/story_list_provider.dart';
 import 'package:mobile_story_app/screen/home/home_page.dart';
+import 'package:mobile_story_app/screen/story/add/add_story_page.dart';
 import 'package:mobile_story_app/screen/story/list/widget/card_story.dart';
 import 'package:provider/provider.dart';
 
@@ -73,6 +74,9 @@ class _ListPageState extends State<ListPage> {
     return AppBar(
       title: const Text('Story List'),
       actions: [
+        IconButton(onPressed: (){
+          Navigator.pushNamed(context, AddStoryPage.routeName);
+        }, icon: const Icon(Icons.add_circle_outline),),
         IconButton(
           onPressed: () {
             context.read<AuthenticationProvider>().logout();
