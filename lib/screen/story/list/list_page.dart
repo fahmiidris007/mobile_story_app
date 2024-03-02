@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
 import 'package:mobile_story_app/provider/story_list_provider.dart';
 import 'package:mobile_story_app/screen/home/home_page.dart';
@@ -7,8 +8,6 @@ import 'package:mobile_story_app/screen/story/list/widget/card_story.dart';
 import 'package:provider/provider.dart';
 
 class ListPage extends StatefulWidget {
-  static const routeName = '/list';
-
   const ListPage({super.key});
 
   @override
@@ -16,6 +15,8 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+
+
   @override
   void initState() {
     super.initState();
@@ -74,17 +75,16 @@ class _ListPageState extends State<ListPage> {
     return AppBar(
       title: const Text('Story List'),
       actions: [
-        IconButton(onPressed: ()async{
-          final result = await Navigator.pushNamed(context, AddStoryPage.routeName);
-          // If the upload was successful, refresh the story list
-          if (result == true) {
-            context.read<StoryListProvider>().fetchAllStory();
-          }
-        }, icon: const Icon(Icons.add_circle_outline),),
+        IconButton(
+          onPressed: () {
+            context.goNamed('add');
+          },
+          icon: const Icon(Icons.add_circle_outline),
+        ),
         IconButton(
           onPressed: () {
             context.read<AuthenticationProvider>().logout();
-            Navigator.pushReplacementNamed(context, HomePage.routeName);
+            context.goNamed('home');
           },
           icon: const Icon(Icons.logout_outlined),
         ),

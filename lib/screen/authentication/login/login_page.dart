@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
 import 'package:mobile_story_app/screen/Authentication/register/register_page.dart';
 import 'package:mobile_story_app/screen/home/home_page.dart';
@@ -6,8 +7,6 @@ import 'package:mobile_story_app/screen/story/list/list_page.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  static const routeName = '/login';
-
   const LoginPage({super.key});
 
   @override
@@ -77,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                             await provider.login(
                                 emailController.text, passwordController.text);
                             if (provider.state == ResultState.success) {
-                              Navigator.pushReplacementNamed(context, HomePage.routeName);
+                              context.goNamed('home');
                             } else if (provider.state == ResultState.loading) {
                               const CircularProgressIndicator();
                             } else {
@@ -96,7 +95,7 @@ class _LoginPageState extends State<LoginPage> {
                     Center(
                         child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, RegisterPage.routeName);
+                        context.goNamed('register');
                       },
                       child: const Text('Register'),
                     )),

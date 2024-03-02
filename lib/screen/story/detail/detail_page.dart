@@ -3,7 +3,6 @@ import 'package:mobile_story_app/provider/story_detail_provider.dart';
 import 'package:provider/provider.dart';
 
 class DetailPage extends StatefulWidget {
-  static const routeName = '/detail';
   final String id;
 
   const DetailPage({super.key, required this.id});
@@ -51,16 +50,16 @@ class _DetailPageState extends State<DetailPage> {
                     height: 250,
                     fit: BoxFit.cover,
                     scale: 2.0,
-                    // loadingBuilder: (BuildContext context, Widget child,
-                    //     ImageChunkEvent? loadingProgress) {
-                    //   if (loadingProgress == null) return child;
-                    //   return CircularProgressIndicator(
-                    //     value: loadingProgress.expectedTotalBytes != null
-                    //         ? loadingProgress.cumulativeBytesLoaded /
-                    //         loadingProgress.expectedTotalBytes!
-                    //         : null,
-                    //   );
-                    // },
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                            : null,
+                      );
+                    },
                   ),
                 ),
               ),

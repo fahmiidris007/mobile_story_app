@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
 import 'package:mobile_story_app/screen/Authentication/login/login_page.dart';
 import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
-  static const routeName = '/register';
-
   const RegisterPage({super.key});
 
   @override
@@ -80,6 +79,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           }
                           return null;
                         },
+                        obscureText: true,
                       ),
                       const SizedBox(height: 24),
                       ElevatedButton(
@@ -91,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               passwordController.text,
                             );
                             if(provider.state == ResultState.success) {
-                              Navigator.pop(context);
+                              context.go('/login');
                             } else if (provider.state == ResultState.loading) {
                               const CircularProgressIndicator();
                             } else if(provider.state == ResultState.error){

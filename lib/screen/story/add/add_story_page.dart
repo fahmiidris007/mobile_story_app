@@ -3,13 +3,14 @@ import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_story_app/provider/add_story_provider.dart';
+import 'package:mobile_story_app/screen/home/home_page.dart';
 import 'package:mobile_story_app/screen/story/add/widget/camera_screen.dart';
 import 'package:provider/provider.dart';
 
 class AddStoryPage extends StatefulWidget {
-  static const routeName = '/add-story';
   const AddStoryPage({super.key});
 
   @override
@@ -123,7 +124,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
     if (uploadProvider.addStory != null) {
       uploadProvider.setImageFile(null);
       uploadProvider.setImagePath(null);
-      Navigator.pop(context, true);
+      context.goNamed('home');
     }
     scaffoldMessengerState.showSnackBar(
       SnackBar(content: Text(uploadProvider.message)),

@@ -4,7 +4,6 @@ import 'package:mobile_story_app/screen/Authentication/login/login_page.dart';
 import 'package:mobile_story_app/utils/session_manager.dart';
 
 class HomePage extends StatelessWidget {
-  static const routeName = '/home';
   final SessionManager _sessionManager = SessionManager();
 
   HomePage({super.key});
