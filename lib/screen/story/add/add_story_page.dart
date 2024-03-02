@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/add_story_provider.dart';
 import 'package:mobile_story_app/screen/home/home_page.dart';
 import 'package:mobile_story_app/screen/story/add/widget/camera_screen.dart';
@@ -30,7 +31,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Camera Project"),
+        title: Text(AppLocalizations.of(context)!.titleAdd),
         actions: [
           IconButton(
             onPressed: () => _onUpload(),
@@ -64,17 +65,17 @@ class _AddStoryPageState extends State<AddStoryPage> {
                     children: [
                       ElevatedButton(
                         onPressed: () => _onGalleryView(),
-                        child: const Text("Gallery"),
+                        child: Text(AppLocalizations.of(context)!.galleryButton),
                       ),
                       ElevatedButton(
                         onPressed: () => _onCameraView(),
-                        child: const Text("Camera"),
+                        child: Text(AppLocalizations.of(context)!.cameraButton),
                       ),
                     ],
                   ),
                   ElevatedButton(
                     onPressed: () => _onCustomCameraView(),
-                    child: const Text("Custom Camera"),
+                    child: Text(AppLocalizations.of(context)!.customCameraButton),
                   ),
                 ],
               ),
@@ -85,16 +86,16 @@ class _AddStoryPageState extends State<AddStoryPage> {
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextFormField(
                 controller: _descController,
-                decoration: const InputDecoration(
-                  labelText: "Deskripsi",
-                  hintText: "Masukkan deskripsi gambar",
+                decoration: InputDecoration(
+                  labelText: AppLocalizations.of(context)!.labelDescription,
+                  hintText: AppLocalizations.of(context)!.hintDescription,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(8)),
                   ),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return "Deskripsi tidak boleh kosong";
+                    return AppLocalizations.of(context)!.errorDescription;
                   }
                   return null;
                 },

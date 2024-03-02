@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
 import 'package:mobile_story_app/screen/Authentication/register/register_page.dart';
 import 'package:mobile_story_app/screen/home/home_page.dart';
@@ -29,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: Text(AppLocalizations.of(context)!.loginTitle),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -43,26 +44,26 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     TextFormField(
                       controller: emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Enter your email',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.labelEmail,
+                        hintText: AppLocalizations.of(context)!.hintEmail,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
+                          return AppLocalizations.of(context)!.errorEmail;
                         }
                         return null;
                       },
                     ),
                     TextFormField(
                       controller: passwordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Enter your password',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.labelPassword,
+                        hintText: AppLocalizations.of(context)!.hintPassword,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
+                          return AppLocalizations.of(context)!.errorPassword;
                         }
                         return null;
                       },
@@ -88,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                             }
                           }
                         },
-                        child: const Text('Login'),
+                        child: Text(AppLocalizations.of(context)!.loginButton),
                       ),
                     ),
                     const SizedBox(height: 24),
@@ -97,7 +98,7 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         context.goNamed('register');
                       },
-                      child: const Text('Register'),
+                      child: Text(AppLocalizations.of(context)!.registerButton),
                     )),
                   ],
                 ),

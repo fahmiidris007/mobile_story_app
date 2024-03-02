@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/story_detail_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -25,7 +26,7 @@ class _DetailPageState extends State<DetailPage> {
     return Consumer<StoryDetailProvider>(builder: (context, state, _) {
       return Scaffold(
         appBar:AppBar(
-          title: const Text('Story Detail'),
+          title:  Text(AppLocalizations.of(context)!.detailTitle),
         ),
         body: _buildBody(state),
       );
@@ -93,8 +94,8 @@ class _DetailPageState extends State<DetailPage> {
         ),
       );
     } else {
-      return const Center(
-          child: Text('Something went wrong! Please try again later.'));
+      return Center(
+          child: Text(AppLocalizations.of(context)!.errorDescription));
     }
   }
 }

@@ -1,5 +1,7 @@
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
 import 'package:mobile_story_app/provider/story_list_provider.dart';
 import 'package:mobile_story_app/screen/home/home_page.dart';
@@ -64,7 +66,7 @@ class _ListPageState extends State<ListPage> {
               ),
             );
           } else {
-            return const Center(child: Text('Please try again later'));
+            return  Center(child: Text(AppLocalizations.of(context)!.errorList));
           }
         },
       ),
@@ -73,7 +75,7 @@ class _ListPageState extends State<ListPage> {
 
   AppBar _buildAppBar(BuildContext context) {
     return AppBar(
-      title: const Text('Story List'),
+      title: Text(AppLocalizations.of(context)!.titleList),
       actions: [
         IconButton(
           onPressed: () {
@@ -83,8 +85,14 @@ class _ListPageState extends State<ListPage> {
         ),
         IconButton(
           onPressed: () {
+            AppSettings.openAppSettings();
+          },
+          icon: const Icon(Icons.settings),
+        ),
+        IconButton(
+          onPressed: () {
             context.read<AuthenticationProvider>().logout();
-            context.goNamed('home');
+            context.goNamed('login');
           },
           icon: const Icon(Icons.logout_outlined),
         ),

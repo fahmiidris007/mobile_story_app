@@ -58,7 +58,6 @@ class AddStoryProvider extends ChangeNotifier{
     int length = imageLength;
     List<int> newByte = [];
     do {
-      ///
       compressQuality -= 10;
       newByte = img.encodeJpg(
         image,

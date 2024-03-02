@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/data/api/api_service.dart';
 import 'package:mobile_story_app/provider/add_story_provider.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
@@ -49,6 +50,8 @@ class MyApp extends StatelessWidget {
         routerDelegate: router.routerDelegate,
         routeInformationProvider: router.routeInformationProvider,
         debugShowCheckedModeBanner: false,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
       ),
     );
   }
