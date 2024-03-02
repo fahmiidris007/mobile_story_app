@@ -4,8 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
 import 'package:mobile_story_app/provider/story_list_provider.dart';
-import 'package:mobile_story_app/screen/home/home_page.dart';
-import 'package:mobile_story_app/screen/story/add/add_story_page.dart';
 import 'package:mobile_story_app/screen/story/list/widget/card_story.dart';
 import 'package:provider/provider.dart';
 
@@ -17,8 +15,6 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-
-
   @override
   void initState() {
     super.initState();
@@ -66,7 +62,7 @@ class _ListPageState extends State<ListPage> {
               ),
             );
           } else {
-            return  Center(child: Text(AppLocalizations.of(context)!.errorList));
+            return Center(child: Text(AppLocalizations.of(context)!.errorList));
           }
         },
       ),
@@ -100,7 +96,3 @@ class _ListPageState extends State<ListPage> {
     );
   }
 }
-
-
-
-

@@ -1,14 +1,14 @@
-import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_story_app/data/api/api_service.dart';
 import 'package:mobile_story_app/model/story/add/add_story.dart';
 
-enum ResultState{loading, noData, hasData, error}
+enum ResultState { loading, noData, hasData, error }
 
-class AddStoryProvider extends ChangeNotifier{
+class AddStoryProvider extends ChangeNotifier {
   late final ApiServices apiServices;
   String? imagePath;
   XFile? imageFile;
@@ -21,33 +21,35 @@ class AddStoryProvider extends ChangeNotifier{
   String _message = '';
 
   String get message => _message;
+
   AddStory? get result => addStory;
+
   ResultState get state => _state;
 
   Future<dynamic> postStory(String description, List<int> photo) async {
-     try {
-       isUploading = true;
-       addStory = AddStory(error: false, message: '');
-        notifyListeners();
-        final story = await apiServices.postStory(description, photo);
-        if (story.error) {
-          _state = ResultState.error;
-          _message = addStory?.message ?? "Error";
-          notifyListeners();
-          return _message;
-        } else {
-          _state = ResultState.hasData;
-          addStory = story;
-          _message = addStory?.message ?? "Success";
-          notifyListeners();
-          return addStory;
-        }
-      } catch (e) {
+    try {
+      isUploading = true;
+      addStory = AddStory(error: false, message: '');
+      notifyListeners();
+      final story = await apiServices.postStory(description, photo);
+      if (story.error) {
         _state = ResultState.error;
-        _message = 'Error: $e';
+        _message = addStory?.message ?? "Error";
         notifyListeners();
         return _message;
+      } else {
+        _state = ResultState.hasData;
+        addStory = story;
+        _message = addStory?.message ?? "Success";
+        notifyListeners();
+        return addStory;
       }
+    } catch (e) {
+      _state = ResultState.error;
+      _message = 'Error: $e';
+      notifyListeners();
+      return _message;
+    }
   }
 
   Future<List<int>> compressImage(List<int> bytes) async {

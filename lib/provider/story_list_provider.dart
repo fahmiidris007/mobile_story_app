@@ -4,10 +4,10 @@ import 'package:mobile_story_app/model/story/list/story_list.dart';
 
 enum ResultStateList { loading, noData, hasData, error }
 
-class StoryListProvider extends ChangeNotifier{
+class StoryListProvider extends ChangeNotifier {
   late final ApiServices apiServices;
 
-  StoryListProvider({required this.apiServices}){
+  StoryListProvider({required this.apiServices}) {
     fetchAllStory();
   }
 
@@ -16,7 +16,9 @@ class StoryListProvider extends ChangeNotifier{
   ResultStateList _state = ResultStateList.loading;
 
   String get message => _message;
+
   StoryList get result => _storyList;
+
   ResultStateList get state => _state;
 
   Future<dynamic> fetchAllStory() async {

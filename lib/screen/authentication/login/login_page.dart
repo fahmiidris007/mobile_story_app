@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
-import 'package:mobile_story_app/screen/Authentication/register/register_page.dart';
-import 'package:mobile_story_app/screen/home/home_page.dart';
-import 'package:mobile_story_app/screen/story/list/list_page.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -71,26 +68,38 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 24),
                     Center(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            await provider.login(
-                                emailController.text, passwordController.text);
-                            if (provider.state == ResultState.success) {
-                              context.goNamed('home');
-                            } else if (provider.state == ResultState.loading) {
-                              const CircularProgressIndicator();
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(provider.message),
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        child: Text(AppLocalizations.of(context)!.loginButton),
-                      ),
+                      child: context.watch<AuthenticationProvider>().isLoading
+                          ? const CircularProgressIndicator()
+                          : ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  await provider.login(emailController.text,
+                                      passwordController.text);
+                                  if (provider.state == ResultState.success) {
+                                    context.replaceNamed('list');
+                                  } else if (provider.state ==
+                                      ResultState.loading) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Loading...'),
+                                      ),
+                                    );
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(provider.message),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blueAccent,
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!.loginButton,
+                                style: const TextStyle(color: Colors.white),
+                              )),
                     ),
                     const SizedBox(height: 24),
                     Center(
@@ -98,7 +107,13 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         context.goNamed('register');
                       },
-                      child: Text(AppLocalizations.of(context)!.registerButton),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.registerButton,
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     )),
                   ],
                 ),

@@ -16,16 +16,17 @@ class StoryList {
   });
 
   factory StoryList.fromJson(Map<String, dynamic> json) => StoryList(
-    error: json["error"],
-    message: json["message"],
-    listStory: List<ListStory>.from(json["listStory"].map((x) => ListStory.fromJson(x))),
-  );
+        error: json["error"],
+        message: json["message"],
+        listStory: List<ListStory>.from(
+            json["listStory"].map((x) => ListStory.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "error": error,
-    "message": message,
-    "listStory": List<dynamic>.from(listStory.map((x) => x.toJson())),
-  };
+        "error": error,
+        "message": message,
+        "listStory": List<dynamic>.from(listStory.map((x) => x.toJson())),
+      };
 }
 
 class ListStory {
@@ -48,22 +49,22 @@ class ListStory {
   });
 
   factory ListStory.fromJson(Map<String, dynamic> json) => ListStory(
-    id: json["id"],
-    name: json["name"],
-    description: json["description"],
-    photoUrl: json["photoUrl"],
-    createdAt: DateTime.parse(json["createdAt"]),
-    lat: json["lat"]?.toDouble() ?? 0.0,
-    lon: json["lon"]?.toDouble() ?? 0.0,
-  );
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        photoUrl: json["photoUrl"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        lat: json["lat"]?.toDouble() ?? 0.0,
+        lon: json["lon"]?.toDouble() ?? 0.0,
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "description": description,
-    "photoUrl": photoUrl,
-    "createdAt": createdAt.toIso8601String(),
-    "lat": lat,
-    "lon": lon,
-  };
+        "id": id,
+        "name": name,
+        "description": description,
+        "photoUrl": photoUrl,
+        "createdAt": createdAt.toIso8601String(),
+        "lat": lat,
+        "lon": lon,
+      };
 }

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:mobile_story_app/model/story/list/story_list.dart';
 
@@ -26,7 +25,7 @@ class ImageBuilder extends StatelessWidget {
           return CircularProgressIndicator(
             value: loadingProgress.expectedTotalBytes != null
                 ? loadingProgress.cumulativeBytesLoaded /
-                loadingProgress.expectedTotalBytes!
+                    loadingProgress.expectedTotalBytes!
                 : null,
           );
         },

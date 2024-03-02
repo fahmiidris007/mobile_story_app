@@ -14,12 +14,12 @@ class Register {
   });
 
   factory Register.fromJson(Map<String, dynamic> json) => Register(
-    error: json["error"],
-    message: json["message"],
-  );
+        error: json["error"],
+        message: json["message"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "error": error,
-    "message": message,
-  };
+        "error": error,
+        "message": message,
+      };
 }

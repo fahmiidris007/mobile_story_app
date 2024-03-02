@@ -25,8 +25,8 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Consumer<StoryDetailProvider>(builder: (context, state, _) {
       return Scaffold(
-        appBar:AppBar(
-          title:  Text(AppLocalizations.of(context)!.detailTitle),
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.detailTitle),
         ),
         body: _buildBody(state),
       );
@@ -57,7 +57,7 @@ class _DetailPageState extends State<DetailPage> {
                       return CircularProgressIndicator(
                         value: loadingProgress.expectedTotalBytes != null
                             ? loadingProgress.cumulativeBytesLoaded /
-                            loadingProgress.expectedTotalBytes!
+                                loadingProgress.expectedTotalBytes!
                             : null,
                       );
                     },

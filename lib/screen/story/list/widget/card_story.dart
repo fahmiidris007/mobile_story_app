@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mobile_story_app/model/story/list/story_list.dart';
-import 'package:mobile_story_app/screen/story/detail/detail_page.dart';
 import 'package:mobile_story_app/screen/story/list/widget/image_builder.dart';
 
 class CardStory extends StatelessWidget {
@@ -15,12 +14,12 @@ class CardStory extends StatelessWidget {
       color: Colors.transparent,
       child: ListTile(
         contentPadding:
-        const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
         leading: ImageBuilder(listStory: listStory),
         title: Text(listStory.name),
         subtitle: Text(listStory.description),
         onTap: () {
-          context.goNamed('detail',pathParameters: {'id': listStory.id});
+          context.goNamed('detail', pathParameters: {'id': listStory.id});
         },
       ),
     );

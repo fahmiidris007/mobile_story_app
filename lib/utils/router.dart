@@ -21,30 +21,29 @@ final GoRouter router = GoRouter(
           ),
         ]),
     GoRoute(
-      path: '/',
-      name: 'home',
-      builder: (context, state) => HomePage(),
-      routes:[
-        GoRoute(
-          path: 'list',
-          name: 'list',
-          builder: (context, state) => const ListPage(),
-        ),
-        GoRoute(
-          path: 'detail/:id',
-          name: 'detail',
-          builder: (context, state) {
-            final id = state.pathParameters['id'];
-            return DetailPage(id: id!);
-          },
-        ),
-        GoRoute(
-          path: 'add',
-          name: 'add',
-          builder: (context, state) => const AddStoryPage(),
-        ),
-      ]
-    ),
+        path: '/',
+        name: 'home',
+        builder: (context, state) => HomePage(),
+        routes: [
+          GoRoute(
+            path: 'list',
+            name: 'list',
+            builder: (context, state) => const ListPage(),
+          ),
+          GoRoute(
+            path: 'detail/:id',
+            name: 'detail',
+            builder: (context, state) {
+              final id = state.pathParameters['id'];
+              return DetailPage(id: id!);
+            },
+          ),
+          GoRoute(
+            path: 'add',
+            name: 'add',
+            builder: (context, state) => const AddStoryPage(),
+          ),
+        ]),
   ],
   errorPageBuilder: (context, state) {
     return MaterialPage(

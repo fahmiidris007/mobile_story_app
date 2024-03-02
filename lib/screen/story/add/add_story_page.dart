@@ -7,7 +7,6 @@ import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/add_story_provider.dart';
-import 'package:mobile_story_app/screen/home/home_page.dart';
 import 'package:mobile_story_app/screen/story/add/widget/camera_screen.dart';
 import 'package:provider/provider.dart';
 
@@ -40,24 +39,24 @@ class _AddStoryPageState extends State<AddStoryPage> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 1,
-              child: context.watch<AddStoryProvider>().imagePath == null
-                  ? const Align(
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.image,
-                  size: 100,
-                ),
-              )
-                  : _showImage(),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Container(
+                height: 200,
+                child: context.watch<AddStoryProvider>().imagePath == null
+                    ? const Align(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.image,
+                          size: 100,
+                        ),
+                      )
+                    : _showImage(),
+              ),
+              SizedBox(height: 16),
+              Column(
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -65,44 +64,61 @@ class _AddStoryPageState extends State<AddStoryPage> {
                     children: [
                       ElevatedButton(
                         onPressed: () => _onGalleryView(),
-                        child: Text(AppLocalizations.of(context)!.galleryButton),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.galleryButton,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                       ElevatedButton(
                         onPressed: () => _onCameraView(),
-                        child: Text(AppLocalizations.of(context)!.cameraButton),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.cameraButton,
+                          style: TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
+                  SizedBox(height: 8),
                   ElevatedButton(
                     onPressed: () => _onCustomCameraView(),
-                    child: Text(AppLocalizations.of(context)!.customCameraButton),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orange,
+                    ),
+                    child: Text(
+                      AppLocalizations.of(context)!.customCameraButton,
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
+              SizedBox(height: 16),
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextFormField(
-                controller: _descController,
-                decoration: InputDecoration(
-                  labelText: AppLocalizations.of(context)!.labelDescription,
-                  hintText: AppLocalizations.of(context)!.hintDescription,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  controller: _descController,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.labelDescription,
+                    hintText: AppLocalizations.of(context)!.hintDescription,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return AppLocalizations.of(context)!.errorDescription;
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return AppLocalizations.of(context)!.errorDescription;
-                  }
-                  return null;
-                },
-                            ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -111,7 +127,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
   _onUpload() async {
     final uploadProvider = context.read<AddStoryProvider>();
     final ScaffoldMessengerState scaffoldMessengerState =
-    ScaffoldMessenger.of(context);
+        ScaffoldMessenger.of(context);
     final imagePath = uploadProvider.imagePath;
     final imageFile = uploadProvider.imageFile;
     if (imagePath == null || imageFile == null) return;
@@ -187,12 +203,12 @@ class _AddStoryPageState extends State<AddStoryPage> {
     final imagePath = context.read<AddStoryProvider>().imagePath;
     return kIsWeb
         ? Image.network(
-      imagePath.toString(),
-      fit: BoxFit.contain,
-    )
+            imagePath.toString(),
+            fit: BoxFit.contain,
+          )
         : Image.file(
-      File(imagePath.toString()),
-      fit: BoxFit.contain,
-    );
+            File(imagePath.toString()),
+            fit: BoxFit.contain,
+          );
   }
 }

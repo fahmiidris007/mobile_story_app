@@ -14,12 +14,12 @@ class AddStory {
   });
 
   factory AddStory.fromJson(Map<String, dynamic> json) => AddStory(
-    error: json["error"],
-    message: json["message"],
-  );
+        error: json["error"],
+        message: json["message"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "error": error,
-    "message": message,
-  };
+        "error": error,
+        "message": message,
+      };
 }
