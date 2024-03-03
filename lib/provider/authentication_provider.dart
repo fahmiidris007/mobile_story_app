@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:mobile_story_app/data/api/api_service.dart';
-import 'package:mobile_story_app/model/Authentication/login/login.dart';
-import 'package:mobile_story_app/model/Authentication/register/register.dart';
+import 'package:mobile_story_app/model/authentication/login/login.dart';
+import 'package:mobile_story_app/model/authentication/register/register.dart';
+
 import 'package:mobile_story_app/utils/session_manager.dart';
 
 enum ResultState { loading, success, error }

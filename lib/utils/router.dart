@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:mobile_story_app/screen/Authentication/login/login_page.dart';
-import 'package:mobile_story_app/screen/Authentication/register/register_page.dart';
+import 'package:mobile_story_app/screen/authentication/login/login_page.dart';
+import 'package:mobile_story_app/screen/authentication/register/register_page.dart';
 import 'package:mobile_story_app/screen/home/home_page.dart';
 import 'package:mobile_story_app/screen/story/add/add_story_page.dart';
 import 'package:mobile_story_app/screen/story/detail/detail_page.dart';

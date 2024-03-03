@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
-import 'package:mobile_story_app/model/Authentication/login/login.dart';
-import 'package:mobile_story_app/model/Authentication/register/register.dart';
+import 'package:mobile_story_app/model/authentication/login/login.dart';
+import 'package:mobile_story_app/model/authentication/register/register.dart';
 import 'package:mobile_story_app/model/story/add/add_story.dart';
 import 'package:mobile_story_app/model/story/detail/story_detail.dart';
 import 'package:mobile_story_app/model/story/list/story_list.dart';
