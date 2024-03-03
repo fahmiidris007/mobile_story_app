@@ -91,13 +91,10 @@ class _RegisterPageState extends State<RegisterPage> {
                                   await provider.register(
                                     nameController.text,
                                     emailController.text,
-                                    passwordController.text,
+                                    passwordController.text, context,
                                   );
                                   if (provider.state == ResultState.success) {
                                     context.go('/login');
-                                  } else if (provider.state ==
-                                      ResultState.loading) {
-                                    const CircularProgressIndicator();
                                   } else if (provider.state ==
                                       ResultState.error) {
                                     ScaffoldMessenger.of(context).showSnackBar(

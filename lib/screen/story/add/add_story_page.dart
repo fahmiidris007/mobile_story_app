@@ -1,13 +1,11 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/add_story_provider.dart';
-import 'package:mobile_story_app/screen/story/add/widget/camera_screen.dart';
 import 'package:provider/provider.dart';
 
 class AddStoryPage extends StatefulWidget {
@@ -43,7 +41,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Container(
+              SizedBox(
                 height: 200,
                 child: context.watch<AddStoryProvider>().imagePath == null
                     ? const Align(
@@ -55,7 +53,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
                       )
                     : _showImage(),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Column(
                 children: [
                   Row(
@@ -69,7 +67,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
                         ),
                         child: Text(
                           AppLocalizations.of(context)!.galleryButton,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                       ElevatedButton(
@@ -79,25 +77,14 @@ class _AddStoryPageState extends State<AddStoryPage> {
                         ),
                         child: Text(
                           AppLocalizations.of(context)!.cameraButton,
-                          style: TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.white),
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
-                  ElevatedButton(
-                    onPressed: () => _onCustomCameraView(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                    ),
-                    child: Text(
-                      AppLocalizations.of(context)!.customCameraButton,
-                      style: TextStyle(color: Colors.white),
-                    ),
-                  ),
                 ],
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextFormField(
@@ -105,7 +92,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
                   decoration: InputDecoration(
                     labelText: AppLocalizations.of(context)!.labelDescription,
                     hintText: AppLocalizations.of(context)!.hintDescription,
-                    border: OutlineInputBorder(
+                    border: const OutlineInputBorder(
                       borderRadius: BorderRadius.all(Radius.circular(8)),
                     ),
                   ),
@@ -130,14 +117,28 @@ class _AddStoryPageState extends State<AddStoryPage> {
         ScaffoldMessenger.of(context);
     final imagePath = uploadProvider.imagePath;
     final imageFile = uploadProvider.imageFile;
-    if (imagePath == null || imageFile == null) return;
+    if (imagePath == null || imageFile == null) {
+      return scaffoldMessengerState.showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.errorImage),
+        ),
+      );
+    }
     final bytes = await imageFile.readAsBytes();
     final newBytes = await uploadProvider.compressImage(bytes);
     final desc = _descController.text;
-    await uploadProvider.postStory(
-      desc,
-      newBytes,
-    );
+    if (desc.isEmpty) {
+      return scaffoldMessengerState.showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.errorDescription),
+        ),
+      );
+    } else {
+      await uploadProvider.postStory(
+        desc,
+        newBytes,
+      );
+    }
     if (uploadProvider.addStory != null) {
       uploadProvider.setImageFile(null);
       uploadProvider.setImagePath(null);
@@ -177,25 +178,6 @@ class _AddStoryPageState extends State<AddStoryPage> {
     if (pickedFile != null) {
       provider.setImageFile(pickedFile);
       provider.setImagePath(pickedFile.path);
-    }
-  }
-
-  _onCustomCameraView() async {
-    final provider = context.read<AddStoryProvider>();
-    final navigator = Navigator.of(context);
-    final cameras = await availableCameras();
-
-    final XFile? resultImageFile = await navigator.push(
-      MaterialPageRoute(
-        builder: (context) => CameraScreen(
-          cameras: cameras,
-        ),
-      ),
-    );
-
-    if (resultImageFile != null) {
-      provider.setImageFile(resultImageFile);
-      provider.setImagePath(resultImageFile.path);
     }
   }
 

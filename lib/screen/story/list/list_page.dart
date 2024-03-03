@@ -62,7 +62,9 @@ class _ListPageState extends State<ListPage> {
               ),
             );
           } else {
-            return Center(child: Text(AppLocalizations.of(context)!.errorList));
+            return Center(
+              child: Text(AppLocalizations.of(context)!.errorList),
+            );
           }
         },
       ),

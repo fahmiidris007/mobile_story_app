@@ -74,16 +74,9 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   await provider.login(emailController.text,
-                                      passwordController.text);
+                                      passwordController.text, context);
                                   if (provider.state == ResultState.success) {
                                     context.replaceNamed('list');
-                                  } else if (provider.state ==
-                                      ResultState.loading) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Loading...'),
-                                      ),
-                                    );
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(

@@ -102,12 +102,8 @@ class ApiServices {
       );
     var response = await http.Response.fromStream(await request.send());
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(
-          'Add story success. Status code: ${response.statusCode}, body: ${response.body}');
       return addStoryFromJson(response.body);
     } else {
-      print(
-          'Add story failed. Status code: ${response.statusCode}, body: ${response.body}');
       throw Exception('Failed to load data');
     }
   }

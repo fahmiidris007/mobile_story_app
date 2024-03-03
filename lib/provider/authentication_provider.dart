@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/data/api/api_service.dart';
 import 'package:mobile_story_app/model/authentication/login/login.dart';
 import 'package:mobile_story_app/model/authentication/register/register.dart';
@@ -27,7 +28,7 @@ class AuthenticationProvider extends ChangeNotifier {
 
   Register get resultRegister => _register;
 
-  Future<void> login(String email, String password) async {
+  Future<void> login(String email, String password, BuildContext context) async {
     try {
       _state = ResultState.loading;
       isLoading = true;
@@ -44,12 +45,12 @@ class AuthenticationProvider extends ChangeNotifier {
     } catch (e) {
       isLoading = false;
       _state = ResultState.error;
-      _message = 'Network Error, Please try again';
+      _message = AppLocalizations.of(context)!.errorEmailOrPassword;
     }
     notifyListeners();
   }
 
-  Future<void> register(String name, String email, String password) async {
+  Future<void> register(String name, String email, String password, BuildContext context) async {
     try {
       _state = ResultState.loading;
       isLoading = true;
@@ -66,7 +67,7 @@ class AuthenticationProvider extends ChangeNotifier {
     } catch (e) {
       isLoading = false;
       _state = ResultState.error;
-      _message = 'Network Error, Please try again';
+      _message = AppLocalizations.of(context)!.errorEmailOrPassword;
     }
     notifyListeners();
   }
