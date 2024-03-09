@@ -8,6 +8,8 @@ import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/add_story_provider.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/story_list_provider.dart';
+
 class AddStoryPage extends StatefulWidget {
   const AddStoryPage({super.key});
 
@@ -142,6 +144,8 @@ class _AddStoryPageState extends State<AddStoryPage> {
     if (uploadProvider.addStory != null) {
       uploadProvider.setImageFile(null);
       uploadProvider.setImagePath(null);
+      final listProvider = context.read<StoryListProvider>();
+      await listProvider.refreshAllStory();
       context.goNamed('home');
     }
     scaffoldMessengerState.showSnackBar(

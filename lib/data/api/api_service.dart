@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_story_app/model/authentication/login/login.dart';
 import 'package:mobile_story_app/model/authentication/register/register.dart';
@@ -55,15 +56,16 @@ class ApiServices {
     }
   }
 
-  Future<StoryList> getStoryList() async {
-    var url = Uri.parse('${baseUrl}stories');
+  Future<StoryList> getStoryList([int page = 1, int size = 10]) async {
+    var url = Uri.parse('${baseUrl}stories?page=$page&size=$size');
     var token = await sessionManager.getUserToken();
     var headers = {
       'Authorization': 'Bearer $token',
     };
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      return storyListFromJson(response.body);
+      final listResponse = StoryList.fromJson(jsonDecode(response.body));
+      return listResponse;
     } else {
       throw Exception('Failed to load data');
     }

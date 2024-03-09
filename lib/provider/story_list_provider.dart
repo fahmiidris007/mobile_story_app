@@ -6,39 +6,71 @@ enum ResultStateList { loading, noData, hasData, error }
 
 class StoryListProvider extends ChangeNotifier {
   late final ApiServices apiServices;
+  int? pageItems = 1;
+  int sizeItems = 10;
 
   StoryListProvider({required this.apiServices}) {
     fetchAllStory();
   }
 
-  late StoryList _storyList;
+  List<ListStory> storyList = [];
+
   String _message = '';
   ResultStateList _state = ResultStateList.loading;
 
   String get message => _message;
 
-  StoryList get result => _storyList;
-
   ResultStateList get state => _state;
 
   Future<dynamic> fetchAllStory() async {
     try {
-      _state = ResultStateList.loading;
-      notifyListeners();
-      final story = await apiServices.getStoryList();
-      if (story.listStory.isEmpty) {
-        _state = ResultStateList.noData;
+      if (pageItems == 1) {
+        _state = ResultStateList.loading;
         notifyListeners();
-        return _message = 'No Data';
-      } else {
-        _state = ResultStateList.hasData;
-        notifyListeners();
-        return _storyList = story;
+      }
+      if (pageItems != null) {
+        final result = await apiServices.getStoryList(pageItems!, sizeItems);
+        if (result.listStory.isEmpty) {
+          _state = ResultStateList.noData;
+          _message = 'Data is empty';
+          notifyListeners();
+        } else {
+          storyList.addAll(result.listStory);
+          _state = ResultStateList.hasData;
+          if (result.listStory.length < sizeItems) {
+            pageItems = null;
+          } else {
+            pageItems = pageItems! + 1;
+          }
+          notifyListeners();
+        }
       }
     } catch (e) {
       _state = ResultStateList.error;
+      _message = 'Error $e';
+    }
+    notifyListeners();
+  }
+
+  Future<dynamic> refreshAllStory() async {
+    try {
+      _state = ResultStateList.loading;
       notifyListeners();
-      return _message = 'Error $e';
+      final result = await apiServices.getStoryList(1, sizeItems);
+      if (result.listStory.isEmpty) {
+        _state = ResultStateList.noData;
+        _message = 'Data is empty';
+        notifyListeners();
+      } else {
+        storyList = result.listStory;
+        _state = ResultStateList.hasData;
+        pageItems = 2;
+        notifyListeners();
+      }
+    } catch (e) {
+      _state = ResultStateList.error;
+      _message = 'Error $e';
+      notifyListeners();
     }
   }
 }

@@ -15,12 +15,29 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
-    Future.microtask(() {
-      context.read<StoryListProvider>().fetchAllStory();
+    final listProvider = context.read<StoryListProvider>();
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
+        if (listProvider.pageItems != null) {
+          listProvider.fetchAllStory();
+        }
+      }
     });
+    Future.microtask(() async => listProvider.fetchAllStory());
+    // Future.microtask(() {
+    //   context.read<StoryListProvider>().fetchAllStory();
+    // });
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 
   @override
@@ -36,14 +53,26 @@ class _ListPageState extends State<ListPage> {
       padding: const EdgeInsets.all(8.0),
       child: Consumer<StoryListProvider>(
         builder: (context, state, _) {
-          if (state.state == ResultStateList.loading) {
+          if (state.state == ResultStateList.loading && state.pageItems == 1) {
             return const Center(child: CircularProgressIndicator());
           } else if (state.state == ResultStateList.hasData) {
+            final story = state.storyList;
             return ListView.builder(
+              controller: _scrollController,
               shrinkWrap: true,
-              itemCount: state.result.listStory.length,
+              itemCount: story.length +
+                  (state.pageItems != null ? 1 : 0),
               itemBuilder: (context, index) {
-                var listStory = state.result.listStory[index];
+                if (index == story.length &&
+                    state.pageItems != null) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(8),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                var listStory = story[index];
                 return CardStory(
                   listStory: listStory,
                 );
