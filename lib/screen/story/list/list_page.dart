@@ -16,6 +16,7 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   final ScrollController _scrollController = ScrollController();
+
   @override
   void initState() {
     super.initState();
@@ -60,11 +61,9 @@ class _ListPageState extends State<ListPage> {
             return ListView.builder(
               controller: _scrollController,
               shrinkWrap: true,
-              itemCount: story.length +
-                  (state.pageItems != null ? 1 : 0),
+              itemCount: story.length + (state.pageItems != null ? 1 : 0),
               itemBuilder: (context, index) {
-                if (index == story.length &&
-                    state.pageItems != null) {
+                if (index == story.length && state.pageItems != null) {
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.all(8),
