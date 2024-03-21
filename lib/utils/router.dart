@@ -6,6 +6,7 @@ import 'package:mobile_story_app/screen/home/home_page.dart';
 import 'package:mobile_story_app/screen/story/add/add_story_page.dart';
 import 'package:mobile_story_app/screen/story/detail/detail_page.dart';
 import 'package:mobile_story_app/screen/story/list/list_page.dart';
+import 'package:mobile_story_app/screen/story/maps/maps_page.dart';
 
 final GoRouter router = GoRouter(
   routes: [
@@ -39,10 +40,17 @@ final GoRouter router = GoRouter(
             },
           ),
           GoRoute(
-            path: 'add',
-            name: 'add',
-            builder: (context, state) => const AddStoryPage(),
-          ),
+              path: 'add',
+              name: 'add',
+              builder: (context, state) => const AddStoryPage(),
+              routes: [
+                GoRoute(
+                    path: 'maps',
+                    name: 'maps',
+                    builder: (context, state) {
+                      return const MapsPage();
+                    }),
+              ]),
         ]),
   ],
   errorPageBuilder: (context, state) {

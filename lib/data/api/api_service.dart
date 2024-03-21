@@ -85,7 +85,7 @@ class ApiServices {
     }
   }
 
-  Future<AddStory> postStory(String description, List<int> photo) async {
+  Future<AddStory> postStory(String description, List<int> photo, double lat, double lon) async {
     var url = Uri.parse('${baseUrl}stories');
     var token = await sessionManager.getUserToken();
     var headers = {
@@ -101,7 +101,9 @@ class ApiServices {
           photo,
           filename: 'photo.jpg',
         ),
-      );
+      )
+      ..fields['lat'] = lat.toString()
+      ..fields['lon'] = lon.toString();
     var response = await http.Response.fromStream(await request.send());
     if (response.statusCode == 200 || response.statusCode == 201) {
       return addStoryFromJson(response.body);

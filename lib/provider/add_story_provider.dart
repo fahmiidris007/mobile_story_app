@@ -1,6 +1,7 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_story_app/data/api/api_service.dart';
@@ -13,6 +14,8 @@ class AddStoryProvider extends ChangeNotifier {
   String? imagePath;
   XFile? imageFile;
   bool isUploading = false;
+  double? lat;
+  double? lon;
 
   AddStoryProvider({required this.apiServices});
 
@@ -26,12 +29,12 @@ class AddStoryProvider extends ChangeNotifier {
 
   ResultState get state => _state;
 
-  Future<dynamic> postStory(String description, List<int> photo) async {
+  Future<dynamic> postStory(String description, List<int> photo, double lat, double lon) async {
     try {
       isUploading = true;
       addStory = AddStory(error: false, message: '');
       notifyListeners();
-      final story = await apiServices.postStory(description, photo);
+      final story = await apiServices.postStory(description, photo, lat, lon);
       if (story.error) {
         _state = ResultState.error;
         _message = addStory?.message ?? "Error";
@@ -77,6 +80,13 @@ class AddStoryProvider extends ChangeNotifier {
 
   void setImagePath(String? value) {
     imagePath = value;
+    notifyListeners();
+  }
+
+  //todo: set location
+  void setLocation(double lat, double lon) {
+    this.lat = lat;
+    this.lon = lon;
     notifyListeners();
   }
 }

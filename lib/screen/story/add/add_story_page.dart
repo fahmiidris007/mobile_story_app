@@ -84,6 +84,17 @@ class _AddStoryPageState extends State<AddStoryPage> {
                       ),
                     ],
                   ),
+                  //todo: add button for select location on maps
+                  ElevatedButton(
+                    onPressed: () => _onLocationView(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.greenAccent,
+                    ),
+                    child: Text(
+                        context.watch<AddStoryProvider>().lat == null ? 'Select Location' : 'Location Selected',
+                      style: const TextStyle(color: Colors.white),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -129,6 +140,15 @@ class _AddStoryPageState extends State<AddStoryPage> {
     final bytes = await imageFile.readAsBytes();
     final newBytes = await uploadProvider.compressImage(bytes);
     final desc = _descController.text;
+    final lat = uploadProvider.lat;
+    final lon = uploadProvider.lon;
+    if (lat == null || lon == null) {
+      return scaffoldMessengerState.showSnackBar(
+        const SnackBar(
+          content: Text('Please select a location'),
+        ),
+      );
+    }
     if (desc.isEmpty) {
       return scaffoldMessengerState.showSnackBar(
         SnackBar(
@@ -139,6 +159,8 @@ class _AddStoryPageState extends State<AddStoryPage> {
       await uploadProvider.postStory(
         desc,
         newBytes,
+        lat,
+        lon
       );
     }
     if (uploadProvider.addStory != null) {
@@ -151,6 +173,8 @@ class _AddStoryPageState extends State<AddStoryPage> {
     scaffoldMessengerState.showSnackBar(
       SnackBar(content: Text(uploadProvider.message)),
     );
+    uploadProvider.lat = null;
+    uploadProvider.lon = null;
   }
 
   _onGalleryView() async {
@@ -196,5 +220,9 @@ class _AddStoryPageState extends State<AddStoryPage> {
             File(imagePath.toString()),
             fit: BoxFit.contain,
           );
+  }
+
+  _onLocationView() {
+    context.goNamed('maps');
   }
 }
