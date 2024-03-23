@@ -1,25 +1,15 @@
-import 'dart:convert';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-Register registerFromJson(String str) => Register.fromJson(json.decode(str));
+part 'register.g.dart';
+part 'register.freezed.dart';
 
-String registerToJson(Register data) => json.encode(data.toJson());
+@freezed
+class Register with _$Register {
+  const factory Register({
+    required bool error,
+    required String message,
+  }) = _Register;
 
-class Register {
-  bool error;
-  String message;
-
-  Register({
-    required this.error,
-    required this.message,
-  });
-
-  factory Register.fromJson(Map<String, dynamic> json) => Register(
-        error: json["error"],
-        message: json["message"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "error": error,
-        "message": message,
-      };
+  factory Register.fromJson(Map<String, dynamic> json) =>
+      _$RegisterFromJson(json);
 }

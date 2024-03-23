@@ -1,25 +1,15 @@
-import 'dart:convert';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-AddStory addStoryFromJson(String str) => AddStory.fromJson(json.decode(str));
+part 'add_story.g.dart';
+part 'add_story.freezed.dart';
 
-String addStoryToJson(AddStory data) => json.encode(data.toJson());
+@freezed
+class AddStory with _$AddStory {
+  const factory AddStory({
+    required bool error,
+    required String message,
+  }) = _AddStory;
 
-class AddStory {
-  bool error;
-  String message;
-
-  AddStory({
-    required this.error,
-    required this.message,
-  });
-
-  factory AddStory.fromJson(Map<String, dynamic> json) => AddStory(
-        error: json["error"],
-        message: json["message"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "error": error,
-        "message": message,
-      };
+  factory AddStory.fromJson(Map<String, dynamic> json) =>
+      _$AddStoryFromJson(json);
 }

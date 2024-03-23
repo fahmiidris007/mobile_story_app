@@ -13,8 +13,7 @@ class StoryListProvider extends ChangeNotifier {
     fetchAllStory();
   }
 
-  List<ListStory> storyList = [];
-
+  List<ListStory> storyList = List<ListStory>.empty(growable: true);
   String _message = '';
   ResultStateList _state = ResultStateList.loading;
 
@@ -24,23 +23,29 @@ class StoryListProvider extends ChangeNotifier {
 
   Future<dynamic> fetchAllStory() async {
     try {
+      if (_state == ResultStateList.loading) {
+        return;
+      }
+
       if (pageItems == 1) {
         _state = ResultStateList.loading;
         notifyListeners();
       }
+
       if (pageItems != null) {
-        final result = await apiServices.getStoryList(pageItems!, sizeItems);
+        int currentPage = pageItems!;
+        pageItems = pageItems! + 1;
+
+        final result = await apiServices.getStoryList(currentPage, sizeItems);
         if (result.listStory.isEmpty) {
           _state = ResultStateList.noData;
           _message = 'Data is empty';
           notifyListeners();
         } else {
-          storyList.addAll(result.listStory);
+          storyList = List.from(storyList)..addAll(List.from(result.listStory));
           _state = ResultStateList.hasData;
           if (result.listStory.length < sizeItems) {
             pageItems = null;
-          } else {
-            pageItems = pageItems! + 1;
           }
           notifyListeners();
         }
@@ -48,8 +53,13 @@ class StoryListProvider extends ChangeNotifier {
     } catch (e) {
       _state = ResultStateList.error;
       _message = 'Error $e';
+      notifyListeners();
+    } finally {
+      if (_state == ResultStateList.loading) {
+        _state = ResultStateList.error;
+        notifyListeners();
+      }
     }
-    notifyListeners();
   }
 
   Future<dynamic> refreshAllStory() async {

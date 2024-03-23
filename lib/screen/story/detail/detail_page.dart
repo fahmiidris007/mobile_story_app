@@ -79,8 +79,12 @@ class _DetailPageState extends State<DetailPage> {
                 ),
               ),
               const SizedBox(height: 16),
-              if(state.result.story.lat != null && state.result.story.lon != null)
-              MapsViewWidget(lat: state.result.story.lat, lon: state.result.story.lon,),
+              if (state.result.story.lat != null &&
+                  state.result.story.lon != null)
+                MapsViewWidget(
+                  lat: state.result.story.lat!,
+                  lon: state.result.story.lon!,
+                ),
             ],
           ),
         ),
@@ -119,18 +123,18 @@ class _MapsViewWidgetState extends State<MapsViewWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.lat == 0.0 && widget.lon == 0.0) return const SizedBox();
+    if (widget.lat == 0.0 && widget.lon == 0.0) return const SizedBox();
     return Column(
       children: [
-        Text(
+        const Text(
           "Maps Location",
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.normal,
           ),
         ),
         const SizedBox(height: 8),
-        Container(
+        SizedBox(
           height: 300,
           child: GoogleMap(
             initialCameraPosition: CameraPosition(
