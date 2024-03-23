@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_story_app/model/authentication/login/login.dart';
 import 'package:mobile_story_app/model/authentication/register/register.dart';
@@ -85,7 +86,7 @@ class ApiServices {
   }
 
   Future<AddStory> postStory(
-      String description, List<int> photo, double lat, double lon) async {
+      String description, List<int> photo, double? lat, double? lon) async {
     var url = Uri.parse('${baseUrl}stories');
     var token = await sessionManager.getUserToken();
     var headers = {

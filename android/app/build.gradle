@@ -58,6 +58,18 @@ android {
             signingConfig signingConfigs.debug
         }
     }
+
+    flavorDimensions "app"
+    productFlavors {
+        free {
+            dimension "app"
+            applicationIdSuffix ".free"
+        }
+        paid {
+            dimension "app"
+            applicationIdSuffix ".paid"
+        }
+    }
 }
 
 flutter {

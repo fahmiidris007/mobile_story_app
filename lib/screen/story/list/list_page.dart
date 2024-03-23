@@ -30,9 +30,6 @@ class _ListPageState extends State<ListPage> {
       }
     });
     Future.microtask(() async => listProvider.fetchAllStory());
-    // Future.microtask(() {
-    //   context.read<StoryListProvider>().fetchAllStory();
-    // });
   }
 
   @override
