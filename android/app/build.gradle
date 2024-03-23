@@ -59,15 +59,17 @@ android {
         }
     }
 
-    flavorDimensions "app"
+    flavorDimensions "flavors"
     productFlavors {
         free {
-            dimension "app"
+            dimension "flavors"
             applicationIdSuffix ".free"
+            versionNameSuffix "-free"
         }
         paid {
-            dimension "app"
+            dimension "flavors"
             applicationIdSuffix ".paid"
+            versionNameSuffix "-paid"
         }
     }
 }
