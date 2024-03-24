@@ -34,5 +34,6 @@
   "selectLocation": "Pilih Lokasi",
   "locationSelected": "Lokasi dipilih",
   "successUploud": "Sukses mengunggah cerita",
-  "errorUploud": "Gagal mengunggah cerita"
+  "errorUploud": "Gagal mengunggah cerita",
+  "mapsLocation": "Peta Lokasi"
 }

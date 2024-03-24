@@ -85,7 +85,6 @@ class _AddStoryPageState extends State<AddStoryPage> {
                       ),
                     ],
                   ),
-                  //todo: add button for select location on maps
                   if (FlavorConfig.instance.variables["canAddLocation"] as bool)
                     ElevatedButton(
                       onPressed: () => _onLocationView(),

@@ -34,5 +34,6 @@
   "selectLocation": "Select Location",
   "locationSelected": "Location Selected",
   "successUploud": "Success uplouding story",
-  "errorUploud": "Error uplouding story"
+  "errorUploud": "Error uplouding story",
+  "mapsLocation": "Maps Location"
 }
