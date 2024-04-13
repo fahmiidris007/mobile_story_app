@@ -1,9 +1,9 @@
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/data/api/api_service.dart';
 import 'package:mobile_story_app/model/story/add/add_story.dart';
 
@@ -16,6 +16,7 @@ class AddStoryProvider extends ChangeNotifier {
   bool isUploading = false;
   double? lat;
   double? lon;
+  BuildContext? context;
 
   AddStoryProvider({required this.apiServices});
 
@@ -29,30 +30,26 @@ class AddStoryProvider extends ChangeNotifier {
 
   ResultState get state => _state;
 
-  Future<dynamic> postStory(String description, List<int> photo, double lat, double lon) async {
+  Future<dynamic> postStory(
+      String description, List<int> photo, double? lat, double? lon) async {
     try {
       isUploading = true;
-      addStory = AddStory(error: false, message: '');
+      addStory = const AddStory(error: false, message: '');
       notifyListeners();
-      final story = await apiServices.postStory(description, photo, lat, lon);
+      final story = await apiServices.postStory(description, photo, lat!, lon!);
       if (story.error) {
         _state = ResultState.error;
-        _message = addStory?.message ?? "Error";
+        _message = AppLocalizations.of(context!)!.errorUploud;
         notifyListeners();
         return _message;
       } else {
         _state = ResultState.hasData;
         addStory = story;
-        _message = addStory?.message ?? "Success";
+        _message = AppLocalizations.of(context!)!.successUploud;
         notifyListeners();
         return addStory;
       }
-    } catch (e) {
-      _state = ResultState.error;
-      _message = 'Error: $e';
-      notifyListeners();
-      return _message;
-    }
+    } catch (e) {}
   }
 
   Future<List<int>> compressImage(List<int> bytes) async {

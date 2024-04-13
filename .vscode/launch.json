@@ -1,0 +1,44 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "mobile_story_app",
+            "request": "launch",
+            "type": "dart"
+        },
+        {
+            "name": "mobile_story_app (profile mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        },
+        {
+            "name": "mobile_story_app (release mode)",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "release"
+        },
+        {
+            "name": "dev_free",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_free.dart",
+            "flutterMode": "debug",
+            "args": [
+              "--flavor",
+              "free"
+            ]
+          },
+          {
+            "name": "dev_paid",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_paid.dart",
+            "flutterMode": "debug",
+            "args": [
+              "--flavor",
+              "paid"
+            ]
+          }
+    ]
+}

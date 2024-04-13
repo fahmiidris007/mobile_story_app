@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_flavor/flutter_flavor.dart';
 import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_story_app/common.dart';
@@ -84,17 +85,23 @@ class _AddStoryPageState extends State<AddStoryPage> {
                       ),
                     ],
                   ),
-                  //todo: add button for select location on maps
-                  ElevatedButton(
-                    onPressed: () => _onLocationView(),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.greenAccent,
-                    ),
-                    child: Text(
-                        context.watch<AddStoryProvider>().lat == null ? 'Select Location' : 'Location Selected',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
+                  if (FlavorConfig.instance.variables["canAddLocation"] as bool)
+                    ElevatedButton(
+                      onPressed: () => _onLocationView(),
+                      style: context.watch<AddStoryProvider>().lat == null
+                          ? ElevatedButton.styleFrom(
+                              backgroundColor: Colors.greenAccent,
+                            )
+                          : ElevatedButton.styleFrom(
+                              backgroundColor: Colors.deepOrangeAccent,
+                            ),
+                      child: Text(
+                        context.watch<AddStoryProvider>().lat == null
+                            ? AppLocalizations.of(context)!.selectLocation
+                            : AppLocalizations.of(context)!.locationSelected,
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    )
                 ],
               ),
               const SizedBox(height: 16),
@@ -142,7 +149,8 @@ class _AddStoryPageState extends State<AddStoryPage> {
     final desc = _descController.text;
     final lat = uploadProvider.lat;
     final lon = uploadProvider.lon;
-    if (lat == null || lon == null) {
+    if (FlavorConfig.instance.variables["canAddLocation"]
+        as bool) if (lat == null || lon == null) {
       return scaffoldMessengerState.showSnackBar(
         const SnackBar(
           content: Text('Please select a location'),
@@ -156,12 +164,10 @@ class _AddStoryPageState extends State<AddStoryPage> {
         ),
       );
     } else {
-      await uploadProvider.postStory(
-        desc,
-        newBytes,
-        lat,
-        lon
-      );
+      if (lat == null || lon == null) {
+        await uploadProvider.postStory(desc, newBytes, 0.0, 0.0);
+      }
+      await uploadProvider.postStory(desc, newBytes, lat, lon);
     }
     if (uploadProvider.addStory != null) {
       uploadProvider.setImageFile(null);

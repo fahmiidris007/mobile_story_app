@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart' as geo;
-import 'package:go_router/go_router.dart';
 
-class PlacemarkWidget extends StatelessWidget {
-  const PlacemarkWidget({
+class DetailPlacemarkWidget extends StatelessWidget {
+  const DetailPlacemarkWidget({
     super.key,
     required this.placemark,
   });
@@ -39,12 +38,6 @@ class PlacemarkWidget extends StatelessWidget {
                 Text(
                   '${placemark.subLocality}, ${placemark.locality}, ${placemark.postalCode}, ${placemark.country}',
                   style: Theme.of(context).textTheme.labelLarge,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    context.goNamed('add');
-                  },
-                  child: const Text('Select this location'),
                 ),
               ],
             ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:mobile_story_app/model/authentication/login/login.dart';
 import 'package:mobile_story_app/model/authentication/register/register.dart';
@@ -28,7 +28,7 @@ class ApiServices {
       ),
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return loginFromJson(response.body);
+      return Login.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load data');
     }
@@ -50,7 +50,7 @@ class ApiServices {
       ),
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return registerFromJson(response.body);
+      return Register.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load data');
     }
@@ -79,13 +79,14 @@ class ApiServices {
     };
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      return storyDetailFromJson(response.body);
+      return StoryDetail.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load data');
     }
   }
 
-  Future<AddStory> postStory(String description, List<int> photo, double lat, double lon) async {
+  Future<AddStory> postStory(
+      String description, List<int> photo, double? lat, double? lon) async {
     var url = Uri.parse('${baseUrl}stories');
     var token = await sessionManager.getUserToken();
     var headers = {
@@ -106,7 +107,7 @@ class ApiServices {
       ..fields['lon'] = lon.toString();
     var response = await http.Response.fromStream(await request.send());
     if (response.statusCode == 200 || response.statusCode == 201) {
-      return addStoryFromJson(response.body);
+      return AddStory.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load data');
     }
