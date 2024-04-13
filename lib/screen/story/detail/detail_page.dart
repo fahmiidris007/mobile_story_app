@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/story_detail_provider.dart';
 import 'package:provider/provider.dart';
 
 class DetailPage extends StatefulWidget {
-  static const routeName = '/detail';
   final String id;
 
   const DetailPage({super.key, required this.id});
@@ -25,8 +26,8 @@ class _DetailPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return Consumer<StoryDetailProvider>(builder: (context, state, _) {
       return Scaffold(
-        appBar:AppBar(
-          title: const Text('Story Detail'),
+        appBar: AppBar(
+          title: Text(AppLocalizations.of(context)!.detailTitle),
         ),
         body: _buildBody(state),
       );
@@ -51,16 +52,16 @@ class _DetailPageState extends State<DetailPage> {
                     height: 250,
                     fit: BoxFit.cover,
                     scale: 2.0,
-                    // loadingBuilder: (BuildContext context, Widget child,
-                    //     ImageChunkEvent? loadingProgress) {
-                    //   if (loadingProgress == null) return child;
-                    //   return CircularProgressIndicator(
-                    //     value: loadingProgress.expectedTotalBytes != null
-                    //         ? loadingProgress.cumulativeBytesLoaded /
-                    //         loadingProgress.expectedTotalBytes!
-                    //         : null,
-                    //   );
-                    // },
+                    loadingBuilder: (BuildContext context, Widget child,
+                        ImageChunkEvent? loadingProgress) {
+                      if (loadingProgress == null) return child;
+                      return CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded /
+                                loadingProgress.expectedTotalBytes!
+                            : null,
+                      );
+                    },
                   ),
                 ),
               ),
@@ -77,6 +78,9 @@ class _DetailPageState extends State<DetailPage> {
                   fontSize: 16,
                 ),
               ),
+              const SizedBox(height: 16),
+              if(state.result.story.lat != null && state.result.story.lon != null)
+              MapsViewWidget(lat: state.result.story.lat, lon: state.result.story.lon,),
             ],
           ),
         ),
@@ -94,8 +98,65 @@ class _DetailPageState extends State<DetailPage> {
         ),
       );
     } else {
-      return const Center(
-          child: Text('Something went wrong! Please try again later.'));
+      return Center(
+          child: Text(AppLocalizations.of(context)!.errorDescription));
     }
+  }
+}
+
+class MapsViewWidget extends StatefulWidget {
+  final double lat;
+  final double lon;
+
+  const MapsViewWidget({super.key, required this.lat, required this.lon});
+
+  @override
+  State<MapsViewWidget> createState() => _MapsViewWidgetState();
+}
+
+class _MapsViewWidgetState extends State<MapsViewWidget> {
+  late GoogleMapController mapController;
+
+  @override
+  Widget build(BuildContext context) {
+    if(widget.lat == 0.0 && widget.lon == 0.0) return const SizedBox();
+    return Column(
+      children: [
+        Text(
+          "Maps Location",
+          style: const TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Container(
+          height: 300,
+          child: GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: LatLng(widget.lat, widget.lon),
+              zoom: 15,
+            ),
+            onMapCreated: (controller) {
+              mapController = controller;
+              mapController.animateCamera(
+                CameraUpdate.newCameraPosition(
+                  CameraPosition(
+                    target: LatLng(widget.lat, widget.lon),
+                    zoom: 15,
+                  ),
+                ),
+              );
+            },
+            markers: {
+              Marker(
+                markerId: const MarkerId('id'),
+                position: LatLng(widget.lat, widget.lon),
+              ),
+            },
+          ),
+        ),
+      ],
+    );
   }
 }

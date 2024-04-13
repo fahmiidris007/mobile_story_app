@@ -1,15 +1,16 @@
 import 'dart:io';
 
-import 'package:camera/camera.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/add_story_provider.dart';
-import 'package:mobile_story_app/screen/story/add/widget/camera_screen.dart';
 import 'package:provider/provider.dart';
 
+import '../../../provider/story_list_provider.dart';
+
 class AddStoryPage extends StatefulWidget {
-  static const routeName = '/add-story';
   const AddStoryPage({super.key});
 
   @override
@@ -29,7 +30,7 @@ class _AddStoryPageState extends State<AddStoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Camera Project"),
+        title: Text(AppLocalizations.of(context)!.titleAdd),
         actions: [
           IconButton(
             onPressed: () => _onUpload(),
@@ -38,24 +39,24 @@ class _AddStoryPageState extends State<AddStoryPage> {
         ],
       ),
       body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 1,
-              child: context.watch<AddStoryProvider>().imagePath == null
-                  ? const Align(
-                alignment: Alignment.center,
-                child: Icon(
-                  Icons.image,
-                  size: 100,
-                ),
-              )
-                  : _showImage(),
-            ),
-            Expanded(
-              flex: 1,
-              child: Column(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              SizedBox(
+                height: 200,
+                child: context.watch<AddStoryProvider>().imagePath == null
+                    ? const Align(
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.image,
+                          size: 100,
+                        ),
+                      )
+                    : _showImage(),
+              ),
+              const SizedBox(height: 16),
+              Column(
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -63,44 +64,61 @@ class _AddStoryPageState extends State<AddStoryPage> {
                     children: [
                       ElevatedButton(
                         onPressed: () => _onGalleryView(),
-                        child: const Text("Gallery"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.blueAccent,
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.galleryButton,
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                       ElevatedButton(
                         onPressed: () => _onCameraView(),
-                        child: const Text("Camera"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.redAccent,
+                        ),
+                        child: Text(
+                          AppLocalizations.of(context)!.cameraButton,
+                          style: const TextStyle(color: Colors.white),
+                        ),
                       ),
                     ],
                   ),
+                  //todo: add button for select location on maps
                   ElevatedButton(
-                    onPressed: () => _onCustomCameraView(),
-                    child: const Text("Custom Camera"),
+                    onPressed: () => _onLocationView(),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.greenAccent,
+                    ),
+                    child: Text(
+                        context.watch<AddStoryProvider>().lat == null ? 'Select Location' : 'Location Selected',
+                      style: const TextStyle(color: Colors.white),
+                    ),
                   ),
                 ],
               ),
-            ),
-            Expanded(
-              flex: 2,
-              child: Padding(
+              const SizedBox(height: 16),
+              Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 32),
                 child: TextFormField(
-                controller: _descController,
-                decoration: const InputDecoration(
-                  labelText: "Deskripsi",
-                  hintText: "Masukkan deskripsi gambar",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(8)),
+                  controller: _descController,
+                  decoration: InputDecoration(
+                    labelText: AppLocalizations.of(context)!.labelDescription,
+                    hintText: AppLocalizations.of(context)!.hintDescription,
+                    border: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
                   ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return AppLocalizations.of(context)!.errorDescription;
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return "Deskripsi tidak boleh kosong";
-                  }
-                  return null;
-                },
-                            ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -109,25 +127,54 @@ class _AddStoryPageState extends State<AddStoryPage> {
   _onUpload() async {
     final uploadProvider = context.read<AddStoryProvider>();
     final ScaffoldMessengerState scaffoldMessengerState =
-    ScaffoldMessenger.of(context);
+        ScaffoldMessenger.of(context);
     final imagePath = uploadProvider.imagePath;
     final imageFile = uploadProvider.imageFile;
-    if (imagePath == null || imageFile == null) return;
+    if (imagePath == null || imageFile == null) {
+      return scaffoldMessengerState.showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.errorImage),
+        ),
+      );
+    }
     final bytes = await imageFile.readAsBytes();
     final newBytes = await uploadProvider.compressImage(bytes);
     final desc = _descController.text;
-    await uploadProvider.postStory(
-      desc,
-      newBytes,
-    );
+    final lat = uploadProvider.lat;
+    final lon = uploadProvider.lon;
+    if (lat == null || lon == null) {
+      return scaffoldMessengerState.showSnackBar(
+        const SnackBar(
+          content: Text('Please select a location'),
+        ),
+      );
+    }
+    if (desc.isEmpty) {
+      return scaffoldMessengerState.showSnackBar(
+        SnackBar(
+          content: Text(AppLocalizations.of(context)!.errorDescription),
+        ),
+      );
+    } else {
+      await uploadProvider.postStory(
+        desc,
+        newBytes,
+        lat,
+        lon
+      );
+    }
     if (uploadProvider.addStory != null) {
       uploadProvider.setImageFile(null);
       uploadProvider.setImagePath(null);
-      Navigator.pop(context, true);
+      final listProvider = context.read<StoryListProvider>();
+      await listProvider.refreshAllStory();
+      context.goNamed('home');
     }
     scaffoldMessengerState.showSnackBar(
       SnackBar(content: Text(uploadProvider.message)),
     );
+    uploadProvider.lat = null;
+    uploadProvider.lon = null;
   }
 
   _onGalleryView() async {
@@ -162,35 +209,20 @@ class _AddStoryPageState extends State<AddStoryPage> {
     }
   }
 
-  _onCustomCameraView() async {
-    final provider = context.read<AddStoryProvider>();
-    final navigator = Navigator.of(context);
-    final cameras = await availableCameras();
-
-    final XFile? resultImageFile = await navigator.push(
-      MaterialPageRoute(
-        builder: (context) => CameraScreen(
-          cameras: cameras,
-        ),
-      ),
-    );
-
-    if (resultImageFile != null) {
-      provider.setImageFile(resultImageFile);
-      provider.setImagePath(resultImageFile.path);
-    }
-  }
-
   Widget _showImage() {
     final imagePath = context.read<AddStoryProvider>().imagePath;
     return kIsWeb
         ? Image.network(
-      imagePath.toString(),
-      fit: BoxFit.contain,
-    )
+            imagePath.toString(),
+            fit: BoxFit.contain,
+          )
         : Image.file(
-      File(imagePath.toString()),
-      fit: BoxFit.contain,
-    );
+            File(imagePath.toString()),
+            fit: BoxFit.contain,
+          );
+  }
+
+  _onLocationView() {
+    context.goNamed('maps');
   }
 }

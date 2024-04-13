@@ -4,7 +4,7 @@ import 'package:mobile_story_app/model/story/detail/story_detail.dart';
 
 enum ResultState { loading, noData, hasData, error }
 
-class StoryDetailProvider extends ChangeNotifier{
+class StoryDetailProvider extends ChangeNotifier {
   late final ApiServices apiServices;
   final String id;
 
@@ -15,7 +15,9 @@ class StoryDetailProvider extends ChangeNotifier{
   String _message = '';
 
   String get message => _message;
+
   StoryDetail get result => _storyDetail;
+
   ResultState get state => _state;
 
   Future<dynamic> fetchStoryDetail(String id) async {

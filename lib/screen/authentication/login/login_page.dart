@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:mobile_story_app/common.dart';
 import 'package:mobile_story_app/provider/authentication_provider.dart';
-import 'package:mobile_story_app/screen/Authentication/register/register_page.dart';
-import 'package:mobile_story_app/screen/home/home_page.dart';
-import 'package:mobile_story_app/screen/story/list/list_page.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
-  static const routeName = '/login';
-
   const LoginPage({super.key});
 
   @override
@@ -30,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Login'),
+        title: Text(AppLocalizations.of(context)!.loginTitle),
       ),
       body: Center(
         child: SingleChildScrollView(
@@ -44,26 +41,26 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     TextFormField(
                       controller: emailController,
-                      decoration: const InputDecoration(
-                        labelText: 'Email',
-                        hintText: 'Enter your email',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.labelEmail,
+                        hintText: AppLocalizations.of(context)!.hintEmail,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your email';
+                          return AppLocalizations.of(context)!.errorEmail;
                         }
                         return null;
                       },
                     ),
                     TextFormField(
                       controller: passwordController,
-                      decoration: const InputDecoration(
-                        labelText: 'Password',
-                        hintText: 'Enter your password',
+                      decoration: InputDecoration(
+                        labelText: AppLocalizations.of(context)!.labelPassword,
+                        hintText: AppLocalizations.of(context)!.hintPassword,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your password';
+                          return AppLocalizations.of(context)!.errorPassword;
                         }
                         return null;
                       },
@@ -71,34 +68,45 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                     const SizedBox(height: 24),
                     Center(
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          if (_formKey.currentState!.validate()) {
-                            await provider.login(
-                                emailController.text, passwordController.text);
-                            if (provider.state == ResultState.success) {
-                              Navigator.pushReplacementNamed(context, HomePage.routeName);
-                            } else if (provider.state == ResultState.loading) {
-                              const CircularProgressIndicator();
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(provider.message),
-                                ),
-                              );
-                            }
-                          }
-                        },
-                        child: const Text('Login'),
-                      ),
+                      child: context.watch<AuthenticationProvider>().isLoading
+                          ? const CircularProgressIndicator()
+                          : ElevatedButton(
+                              onPressed: () async {
+                                if (_formKey.currentState!.validate()) {
+                                  await provider.login(emailController.text,
+                                      passwordController.text, context);
+                                  if (provider.state == ResultState.success) {
+                                    context.replaceNamed('list');
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                        content: Text(provider.message),
+                                      ),
+                                    );
+                                  }
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.blueAccent,
+                              ),
+                              child: Text(
+                                AppLocalizations.of(context)!.loginButton,
+                                style: const TextStyle(color: Colors.white),
+                              )),
                     ),
                     const SizedBox(height: 24),
                     Center(
                         child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushNamed(context, RegisterPage.routeName);
+                        context.goNamed('register');
                       },
-                      child: const Text('Register'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                      ),
+                      child: Text(
+                        AppLocalizations.of(context)!.registerButton,
+                        style: const TextStyle(color: Colors.white),
+                      ),
                     )),
                   ],
                 ),

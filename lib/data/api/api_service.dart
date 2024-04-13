@@ -1,8 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
-import 'package:mobile_story_app/model/Authentication/login/login.dart';
-import 'package:mobile_story_app/model/Authentication/register/register.dart';
+import 'package:mobile_story_app/model/authentication/login/login.dart';
+import 'package:mobile_story_app/model/authentication/register/register.dart';
 import 'package:mobile_story_app/model/story/add/add_story.dart';
 import 'package:mobile_story_app/model/story/detail/story_detail.dart';
 import 'package:mobile_story_app/model/story/list/story_list.dart';
@@ -55,15 +56,16 @@ class ApiServices {
     }
   }
 
-  Future<StoryList> getStoryList() async {
-    var url = Uri.parse('${baseUrl}stories');
+  Future<StoryList> getStoryList([int page = 1, int size = 10]) async {
+    var url = Uri.parse('${baseUrl}stories?page=$page&size=$size');
     var token = await sessionManager.getUserToken();
     var headers = {
       'Authorization': 'Bearer $token',
     };
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      return storyListFromJson(response.body);
+      final listResponse = StoryList.fromJson(jsonDecode(response.body));
+      return listResponse;
     } else {
       throw Exception('Failed to load data');
     }
@@ -83,7 +85,7 @@ class ApiServices {
     }
   }
 
-  Future<AddStory> postStory(String description, List<int> photo) async {
+  Future<AddStory> postStory(String description, List<int> photo, double lat, double lon) async {
     var url = Uri.parse('${baseUrl}stories');
     var token = await sessionManager.getUserToken();
     var headers = {
@@ -99,15 +101,13 @@ class ApiServices {
           photo,
           filename: 'photo.jpg',
         ),
-      );
+      )
+      ..fields['lat'] = lat.toString()
+      ..fields['lon'] = lon.toString();
     var response = await http.Response.fromStream(await request.send());
     if (response.statusCode == 200 || response.statusCode == 201) {
-      print(
-          'Add story success. Status code: ${response.statusCode}, body: ${response.body}');
       return addStoryFromJson(response.body);
     } else {
-      print(
-          'Add story failed. Status code: ${response.statusCode}, body: ${response.body}');
       throw Exception('Failed to load data');
     }
   }

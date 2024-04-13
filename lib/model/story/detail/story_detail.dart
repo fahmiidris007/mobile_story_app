@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-StoryDetail storyDetailFromJson(String str) => StoryDetail.fromJson(json.decode(str));
+StoryDetail storyDetailFromJson(String str) =>
+    StoryDetail.fromJson(json.decode(str));
 
 String storyDetailToJson(StoryDetail data) => json.encode(data.toJson());
 
@@ -16,16 +17,16 @@ class StoryDetail {
   });
 
   factory StoryDetail.fromJson(Map<String, dynamic> json) => StoryDetail(
-    error: json["error"],
-    message: json["message"],
-    story: Story.fromJson(json["story"]),
-  );
+        error: json["error"],
+        message: json["message"],
+        story: Story.fromJson(json["story"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "error": error,
-    "message": message,
-    "story": story.toJson(),
-  };
+        "error": error,
+        "message": message,
+        "story": story.toJson(),
+      };
 }
 
 class Story {
@@ -48,22 +49,22 @@ class Story {
   });
 
   factory Story.fromJson(Map<String, dynamic> json) => Story(
-    id: json["id"],
-    name: json["name"],
-    description: json["description"],
-    photoUrl: json["photoUrl"],
-    createdAt: DateTime.parse(json["createdAt"]),
-    lat: json["lat"]?.toDouble() ?? 0.0,
-    lon: json["lon"]?.toDouble() ?? 0.0,
-  );
+        id: json["id"],
+        name: json["name"],
+        description: json["description"],
+        photoUrl: json["photoUrl"],
+        createdAt: DateTime.parse(json["createdAt"]),
+        lat: json["lat"]?.toDouble() ?? 0.0,
+        lon: json["lon"]?.toDouble() ?? 0.0,
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id,
-    "name": name,
-    "description": description,
-    "photoUrl": photoUrl,
-    "createdAt": createdAt.toIso8601String(),
-    "lat": lat,
-    "lon": lon,
-  };
+        "id": id,
+        "name": name,
+        "description": description,
+        "photoUrl": photoUrl,
+        "createdAt": createdAt.toIso8601String(),
+        "lat": lat,
+        "lon": lon,
+      };
 }
