@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:mobile_story_app/model/Authentication/login/login.dart';
 import 'package:mobile_story_app/model/Authentication/register/register.dart';
+import 'package:mobile_story_app/model/story/add/add_story.dart';
 import 'package:mobile_story_app/model/story/detail/story_detail.dart';
 import 'package:mobile_story_app/model/story/list/story_list.dart';
 import 'package:mobile_story_app/utils/session_manager.dart';
@@ -76,12 +77,37 @@ class ApiServices {
     };
     var response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
-      print(
-          'Get story detail success. Status code: ${response.statusCode}, body: ${response.body}');
       return storyDetailFromJson(response.body);
     } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
+  Future<AddStory> postStory(String description, List<int> photo) async {
+    var url = Uri.parse('${baseUrl}stories');
+    var token = await sessionManager.getUserToken();
+    var headers = {
+      'Authorization': 'Bearer $token',
+      'Content-Type': 'multipart/form-data',
+    };
+    var request = http.MultipartRequest('POST', url)
+      ..headers.addAll(headers)
+      ..fields['description'] = description
+      ..files.add(
+        http.MultipartFile.fromBytes(
+          'photo',
+          photo,
+          filename: 'photo.jpg',
+        ),
+      );
+    var response = await http.Response.fromStream(await request.send());
+    if (response.statusCode == 200 || response.statusCode == 201) {
       print(
-          'Get story detail failed. Status code: ${response.statusCode}, body: ${response.body}');
+          'Add story success. Status code: ${response.statusCode}, body: ${response.body}');
+      return addStoryFromJson(response.body);
+    } else {
+      print(
+          'Add story failed. Status code: ${response.statusCode}, body: ${response.body}');
       throw Exception('Failed to load data');
     }
   }
